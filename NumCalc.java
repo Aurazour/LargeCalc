@@ -181,20 +181,21 @@ public class NumCalc {
 
 	public String subHelp(SmartList x, SmartList y) {
 		//made these to make the subtraction code cleaner
-		String sum = "";
+		String diff = "";
 		int temp;
 		int carry = 0;
 		x.resetBackward();
 		y.resetBackward();
 		for (int i = 0; i < x.lengthIs(); i++) {
-			if (i >= x.lengthIs()) {
+			if (i >= x.lengthIs()) { //x has run out of place values
+				//because the other number is finished we just need to drop down the remaining values
 				temp = y.getPriorItem() - carry;
 				carry = 0;
 				if (temp < 0) {
 					carry = 1;
 					temp = temp + 10;
 				}
-			} else if (i >= y.lengthIs()) {
+			} else if (i >= y.lengthIs()) {//y has run out of place values
 				temp = x.getPriorItem() - carry;
 				carry = 0;
 				if (temp < 0) {
@@ -203,15 +204,15 @@ public class NumCalc {
 				}
 			} else {
 				temp = (x.getPriorItem() - carry) - y.getPriorItem();
-				carry = 0;
-				if (temp < 0) {
-					carry = 1;
+				carry = 0; //reset carry over because we've used it
+				if (temp < 0) { //checks if there's a need for carryover. Same loop in each case
+					carry = 1; //the nodes are unaffected so you manually change them here
 					temp = temp + 10;
 				}
 			}
-			sum = temp + sum;
+			diff = temp + diff;
 		}
-		return remove0(sum);
+		return remove0(diff);
 	}
 
 	public String addHelp(SmartList x, SmartList y) {
@@ -220,7 +221,13 @@ public class NumCalc {
 		int carry = 0;
 		x.resetBackward();
 		y.resetBackward();
-
+		/*
+		* So first case: When x has a greater place value than y, it's a matter
+		* of dealing with any existing carry over and then otherwise adding the value
+		* to the sum
+		* Second case: assumes numbers are same length or both have place values that
+		* matter. This adds the byte at the current value, THEN moves backwards
+		* It then adds any carry over from the addition before it*/
 		for (int i = 0; i < x.lengthIs(); i++) {
 			if (i >= y.lengthIs()) {
 				temp = x.getPriorItem();
@@ -230,11 +237,11 @@ public class NumCalc {
 			} else {
 				temp = x.getPriorItem() + y.getPriorItem();
 				temp = temp + carry;
-				sum = (temp % 10) + sum;
-				carry = temp / 10;
+				sum = (temp % 10) + sum; //string concatenation
+				carry = temp / 10; //int division
 			}
 		}
-		if (carry > 0) {
+		if (carry > 0) { //deals with any remainder at the end and then drops it down directly
 			sum = carry + sum;
 		}
 		return remove0(sum);

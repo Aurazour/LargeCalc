@@ -21,6 +21,7 @@ public class SmartList  {
 
 	public byte getNextItem() {
 		// This iterates through each element starting from the front
+		//this returns the current back pointer and THEN moves forwards
 		byte now;
 		if (forward.next==null) {
 			now = forward.digit; //gets byte value of the pointer
@@ -34,18 +35,17 @@ public class SmartList  {
 	}
 
 	public void resetBackward() {
-		// TODO Auto-generated method stub
 		//finds the last item in the list and sets a pointer to it
 		backward = listLast;
 	}
 
 	public byte getPriorItem() {
-		// TODO Auto-generated method stub
 		//goes back an item
+		//this returns the current back pointer and THEN moves backwards
 		byte back;
 		if (backward==listFirst) {
 			back = backward.digit;
-			backward = listLast;
+			backward = listLast; //this is so it raps around
 		}
 		else {
 		back = backward.digit;
